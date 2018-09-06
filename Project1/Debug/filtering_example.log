@@ -1,0 +1,5 @@
+﻿  resize.cpp
+c:\users\dlimi\documents\elec4622\project1 - copy\resize.cpp(146): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\dlimi\documents\elec4622\project1 - copy\resize.cpp(298): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\dlimi\documents\elec4622\project1 - copy\resize.cpp(300): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  filtering_example.vcxproj -> C:\Users\dlimi\Documents\ELEC4622\Project1 - Copy\Debug\filtering_example.exe
