@@ -1,0 +1,6 @@
+﻿  resize.cpp
+c:\users\dlimi\documents\elec4622\project1_3\resize.cpp(99): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\dlimi\documents\elec4622\project1_3\resize.cpp(43): warning C4101: 'c': unreferenced local variable
+c:\users\dlimi\documents\elec4622\project1_3\resize.cpp(219): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\dlimi\documents\elec4622\project1_3\resize.cpp(221): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  filtering_example.vcxproj -> C:\Users\dlimi\Documents\ELEC4622\Project1_3\Debug\filtering_example.exe

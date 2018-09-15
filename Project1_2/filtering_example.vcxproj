@@ -85,10 +85,8 @@
   <ItemGroup>
     <ClCompile Include="filtering_main.cpp" />
     <ClCompile Include="io_bmp\io_bmp.cpp" />
-    <ClCompile Include="resize.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="resize.h" />
     <ClInclude Include="image_comps.h" />
     <ClInclude Include="io_bmp\io_bmp.h" />
   </ItemGroup>

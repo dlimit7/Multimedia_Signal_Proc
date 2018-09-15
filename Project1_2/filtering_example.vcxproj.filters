@@ -16,9 +16,6 @@
     <ClCompile Include="io_bmp\io_bmp.cpp">
       <Filter>io_bmp</Filter>
     </ClCompile>
-    <ClCompile Include="resize.cpp">
-      <Filter>main</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="image_comps.h">
@@ -26,9 +23,6 @@
     </ClInclude>
     <ClInclude Include="io_bmp\io_bmp.h">
       <Filter>io_bmp</Filter>
-    </ClInclude>
-    <ClInclude Include="resize.h">
-      <Filter>main</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

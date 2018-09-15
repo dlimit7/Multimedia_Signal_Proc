@@ -163,37 +163,37 @@ void apply_filter(my_image_comp *in, my_image_comp *out, bool is_expand, bool is
 int
   main(int argc, char *argv[])
 {
-  if (argc != 6)
+  if (argc != 4)
     {
-      fprintf(stderr,"Usage: %s <in bmp file> <out bmp file> <H> <is_expand> <is_sinc_interp>\n",argv[0]);
+      fprintf(stderr,"Usage: %s <in bmp file> <in bmp file> <out bmp file> \n",argv[0]);
       return -1;
     }
 
   int err_code=0;
   try {
-      // Read the input image
+      // Read the input image #1 
       bmp_in in;
       if ((err_code = bmp_in__open(&in,argv[1])) != 0)
         throw err_code;
 
-      int width = in.cols, height = in.rows;
-      int n, num_comps = in.num_components;
-      my_image_comp *input_comps = new my_image_comp[num_comps];
-      for (n=0; n < num_comps; n++)
-        input_comps[n].init(height,width, 15); // Leave a border of 15
+      int width1 = in.cols, height1 = in.rows;
+      int n, num_comps1 = in.num_components;
+      my_image_comp *input1_comps = new my_image_comp[num_comps1];
+      for (n=0; n < num_comps1; n++)
+        input1_comps[n].init(height1,width1, 0); // Leave a border of 4
       
       int r; // Declare row index
-      io_byte *line = new io_byte[width*num_comps];
-      for (r=height-1; r >= 0; r--)
+      io_byte *line = new io_byte[width1*num_comps1];
+      for (r=height1-1; r >= 0; r--)
         { // "r" holds the true row index we are reading, since the image is
           // stored upside down in the BMP file.
           if ((err_code = bmp_in__get_line(&in,line)) != 0)
             throw err_code;
-          for (n=0; n < num_comps; n++)
+          for (n=0; n < num_comps1; n++)
             {
               io_byte *src = line+n; // Points to first sample of component n
-              float *dst = input_comps[n].buf + r * input_comps[n].stride;
-				  for (int c = 0; c < width; c++, src += num_comps)
+              float *dst = input1_comps[n].buf + r * input1_comps[n].stride;
+				  for (int c = 0; c < width1; c++, src += num_comps1)
                 dst[c] = (float) *src; // The cast to type "float" is not
                       // strictly required here, since bytes can always be
                       // converted to floats without any loss of information.
@@ -202,41 +202,84 @@ int
       bmp_in__close(&in);
 		delete[] line;
 
-      // Allocate storage for the filtered output
-		printf("original height %d, width %d\n", height, width);
-		int H = (atoi(argv[3]));
-		bool is_expand = (atoi(argv[4])) ? true : false;
-		bool is_sinc_interp = (atoi(argv[5])) ? true : false;
-		double temp;
-		if (is_expand) {
-			temp = (5.0 / 3) * height; height = ceil(temp);
-			temp = (5.0 / 3) * width; width = ceil(temp);
+		// Read the input image #2
+		if ((err_code = bmp_in__open(&in, argv[2])) != 0)
+			throw err_code;
+
+		int width2 = in.cols, height2 = in.rows;
+		int num_comps2 = in.num_components;
+		my_image_comp *input2_comps = new my_image_comp[num_comps2];
+		for (n = 0; n < num_comps2; n++)
+			input2_comps[n].init(height2, width2, 0); // Leave a border of 0
+
+		line = new io_byte[width2*num_comps2];
+		for (r = height2 - 1; r >= 0; r--)
+		{ // "r" holds the true row index we are reading, since the image is
+		  // stored upside down in the BMP file.
+			if ((err_code = bmp_in__get_line(&in, line)) != 0)
+				throw err_code;
+			for (n = 0; n < num_comps2; n++)
+			{
+				io_byte *src = line + n; // Points to first sample of component n
+				float *dst = input2_comps[n].buf + r * input2_comps[n].stride;
+				for (int c = 0; c < width2; c++, src += num_comps2)
+					dst[c] = (float)*src; // The cast to type "float" is not
+												 // strictly required here, since bytes can always be
+												 // converted to floats without any loss of information.
+			}
 		}
-		else {
-			temp = (3.0 / 5) * height; height = ceil(temp);
-			temp = (3.0 / 5) * width; width = ceil(temp);
-		}
+		bmp_in__close(&in);
+		delete[] line;
+
+      // Allocate storage for the difference image
+		int height, width, num_comps;
+		height = (height1 > height2) ? height2 : height1; // get the smaller dimensions
+		width = (width1 > width2) ? width2 : width1;
+		num_comps = (num_comps1 > num_comps2) ? num_comps2 : num_comps1;
+
 		printf("New height %d, new width %d\n\n", height, width);
-		printf("Setting up kernels\n");
-		my_resizer resizer;
-		resizer.init(H, is_expand, is_sinc_interp);
+
       my_image_comp *output_comps = new my_image_comp[num_comps];
       for (n=0; n < num_comps; n++)
         output_comps[n].init(height,width,0); // Don't need a border for output
 
-      // Process the image, all in floating point (easy)
+      // Process the input images --> generate difference images, Mean Error, MSE, PSNR per component
 		printf("Process Image: num comps %d\n", num_comps);
-      for (n=0; n < num_comps; n++)
-        input_comps[n].perform_boundary_extension();
+		float *meanError = new float[num_comps];
+		float *MSE = new float[num_comps];
+		float* PSNR = new float[num_comps];
 		for (n = 0; n < num_comps; n++) {
-			resizer.apply_filter(input_comps + n, output_comps + n);
+			meanError[n] = 0.0f;
+			MSE[n] = 0.0f;
+			PSNR[n] = 0.0f;
+		}
+		float diff, constant = 1.0f / (width*height);
+		int row, col;
+		for (n = 0; n < num_comps; n++) {
+			for (row = 0; row < height; row++) {
+				float * x = input1_comps[n].buf + row * input1_comps[n].stride;
+				float * y = input2_comps[n].buf + row * input2_comps[n].stride;
+				float * out = output_comps[n].buf + row * output_comps[n].stride;
+				for (col = 0; col < width; col++) {
+					diff = x[col] - y[col];
+					meanError[n] += diff;
+					MSE[n] += diff * diff;
+					out[col] = 128.0f + (0.5f)*diff;
+				}
+			}
+			meanError[n] = meanError[n] * constant;
+			MSE[n] = MSE[n] * constant;
+			PSNR[n] = 10 * log10(255 * 255 * (1 / MSE[n]));
+		}
+		for (n = 0; n < num_comps; n++) {
+			printf("For image component #%d,\n Mean Error is %f\n MSE is %f\n PSNR is %f\n", n, meanError[n], MSE[n], PSNR[n]);
 		}
 
 		printf("Write out the image\n");
       // Write the image back out again
       bmp_out out;
 		line = new io_byte[width*num_comps];
-      if ((err_code = bmp_out__open(&out,argv[2],width,height,num_comps)) != 0)
+      if ((err_code = bmp_out__open(&out,argv[4],width,height,num_comps)) != 0)
         throw err_code;
       for (r=height-1; r >= 0; r--)
 		{ // "r" holds the true row index we are writing, since the image is
@@ -262,7 +305,8 @@ int
 		}
       bmp_out__close(&out);
       delete[] line;
-      delete[] input_comps;
+      delete[] input1_comps;
+		delete[] input2_comps;
       delete[] output_comps;
 		printf("DONNNEEEEE\n");
   }

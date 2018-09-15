@@ -103,7 +103,7 @@ void my_resizer::init(int H, bool is_expand, bool is_sinc_interp)
 					}
 				}
 			}
-			/*
+			
 			// Debugging
 			for (i = 0; i < 25; i++) {
 				printf(" i = %d\n", i);
@@ -115,7 +115,7 @@ void my_resizer::init(int H, bool is_expand, bool is_sinc_interp)
 				}
 				printf("\n\n");
 			}
-			
+			/*
 			// Recalculate the gain to check if 1
 			for (i = 0; i < 25; i++) { // For each kernel..
 				gain = 0;
