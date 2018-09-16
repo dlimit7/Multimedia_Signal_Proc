@@ -151,7 +151,7 @@ int
       int n, num_comps = in.num_components;
       my_aligned_image_comp *input_comps = new my_aligned_image_comp[num_comps];
       for (n=0; n < num_comps; n++)
-        input_comps[n].init(height,width, 6); // Leave a border of 15
+        input_comps[n].init(height,width, 16); // Leave a border of 16
       
       int r; // Declare row index
       io_byte *line = new io_byte[width*num_comps];
@@ -174,7 +174,9 @@ int
 		delete[] line;
 
       // Allocate storage for the filtered output
+#ifdef DEBUG
 		printf("original height %d, width %d\n", height, width);
+#endif
 		int H = (atoi(argv[3]));
 		bool is_expand = (atoi(argv[4])) ? true : false;
 		bool is_sinc_interp = (atoi(argv[5])) ? true : false;
@@ -187,8 +189,10 @@ int
 			temp = (3.0 / 5) * height; height = ceil(temp);
 			temp = (3.0 / 5) * width; width = ceil(temp);
 		}
+#ifdef DEBUG
 		printf("New height %d, new width %d\n\n", height, width);
 		printf("Setting up kernels\n");
+#endif
 		my_resizer resizer;
 		resizer.init(H, is_expand, is_sinc_interp);
       my_aligned_image_comp *output_comps = new my_aligned_image_comp[num_comps];
@@ -196,14 +200,31 @@ int
         output_comps[n].init(height,width,0); // Don't need a border for output
 
       // Process the image, all in floating point (easy)
+#ifndef DEBUG
 		printf("Process Image: num comps %d\n", num_comps);
+#ifdef INTRINSICS
+		printf("Intrinsics used\n");
+#endif
+		if (is_expand) {
+			if (is_sinc_interp) {
+				printf("Expansion using Sinc interpolation\n");
+			}
+			else {
+				printf("Expansion using Bilinear Interpolation\n");
+			}
+		}
+		else {
+			printf("Reduction by Sinc Interpolation\n");
+		}
+#endif
       for (n=0; n < num_comps; n++)
         input_comps[n].perform_boundary_extension();
 		for (n = 0; n < num_comps; n++) {
 			resizer.apply_filter(input_comps + n, output_comps + n);
 		}
-
+#ifdef DEBUG
 		printf("Write out the image\n");
+#endif
       // Write the image back out again
       bmp_out out;
 		line = new io_byte[width*num_comps];
@@ -235,7 +256,6 @@ int
       delete[] line;
       delete[] input_comps;
       delete[] output_comps;
-		printf("DONNNEEEEE\n");
   }
   catch (int exc) {
       if (exc == IO_ERR_NO_FILE)

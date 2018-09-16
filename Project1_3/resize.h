@@ -1,4 +1,8 @@
+#include <emmintrin.h>
 #include "aligned_image_comps.h"
+
+#define INTRINSICS
+//#define DEBUG
 
 class my_resizer 
 {
@@ -37,6 +41,9 @@ class my_resizer
 		// Discrete 2D Kernels
 		//float *q[25];
 		// 1D Kernels
+#ifdef INTRINSICS
+		__m128 *g_intr[5];
+#endif
 		float *g[5];
 };
 

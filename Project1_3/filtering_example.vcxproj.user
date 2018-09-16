@@ -4,7 +4,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LocalDebuggerCommandArguments>lenna_mono.bmp out.bmp</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>lenna_mono.bmp out.bmp 5 0 0</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>

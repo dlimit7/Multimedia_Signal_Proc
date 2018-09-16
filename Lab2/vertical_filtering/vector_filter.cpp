@@ -48,3 +48,17 @@ void my_aligned_image_comp::vector_filter(my_aligned_image_comp *in)
         line_out[c] = sum;
       }
 }
+
+/*
+// Perform the convolution
+for (int r = 0; r < height; r++)
+	for (int c = 0; c < width; c++)
+	{
+		float *ip = in->buf + r * in->stride + c;
+		float *op = buf + r * stride + c;
+		float sum = 0.0F;
+		for (int y = -FILTER_EXTENT; y <= FILTER_EXTENT; y++)
+			sum += ip[y*in->stride] * mirror_psf[y];
+		*op = sum;
+	}
+*/
