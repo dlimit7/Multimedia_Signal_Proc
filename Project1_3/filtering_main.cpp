@@ -200,11 +200,12 @@ int
         output_comps[n].init(height,width,0); // Don't need a border for output
 
       // Process the image, all in floating point (easy)
-#ifndef DEBUG
-		printf("Process Image: num comps %d\n", num_comps);
+
 #ifdef INTRINSICS
 		printf("Intrinsics used\n");
 #endif
+#ifdef DEBUG
+		printf("Process Image: num comps %d\n", num_comps);
 		if (is_expand) {
 			if (is_sinc_interp) {
 				printf("Expansion using Sinc interpolation\n");

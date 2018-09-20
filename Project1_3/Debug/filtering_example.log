@@ -1,4 +1,11 @@
-﻿  resize.cpp
+﻿  filtering_main.cpp
+c:\users\dlimi\documents\elec4622\project1_3\filtering_main.cpp(185): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\dlimi\documents\elec4622\project1_3\filtering_main.cpp(186): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\dlimi\documents\elec4622\project1_3\filtering_main.cpp(189): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\dlimi\documents\elec4622\project1_3\filtering_main.cpp(190): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+  Generating Code...
+  Compiling...
+  resize.cpp
 c:\users\dlimi\documents\elec4622\project1_3\resize.cpp(50): warning C4316: '__m128': object allocated on the heap may not be aligned 16
 c:\users\dlimi\documents\elec4622\project1_3\resize.cpp(111): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 c:\users\dlimi\documents\elec4622\project1_3\resize.cpp(43): warning C4101: 'c': unreferenced local variable
@@ -6,4 +13,5 @@ c:\users\dlimi\documents\elec4622\project1_3\resize.cpp(313): warning C4244: '='
 c:\users\dlimi\documents\elec4622\project1_3\resize.cpp(315): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 c:\users\dlimi\documents\elec4622\project1_3\resize.cpp(160): warning C4101: 'op': unreferenced local variable
 c:\users\dlimi\documents\elec4622\project1_3\resize.cpp(332): warning C4101: 'op': unreferenced local variable
+  Generating Code...
   filtering_example.vcxproj -> C:\Users\dlimi\Documents\ELEC4622\Project1_3\Debug\filtering_example.exe

@@ -1,0 +1,14 @@
+﻿  filtering_main.cpp
+c:\users\dlimi\documents\elec4622\project1\filtering_main.cpp(214): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\dlimi\documents\elec4622\project1\filtering_main.cpp(215): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\dlimi\documents\elec4622\project1\filtering_main.cpp(218): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\dlimi\documents\elec4622\project1\filtering_main.cpp(219): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+  io_bmp.cpp
+  resize.cpp
+c:\users\dlimi\documents\elec4622\project1\resize.cpp(147): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\dlimi\documents\elec4622\project1\resize.cpp(294): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\dlimi\documents\elec4622\project1\resize.cpp(296): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  Generating code
+  All 25 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  filtering_example.vcxproj -> C:\Users\dlimi\Documents\ELEC4622\Project1\Release\filtering_example.exe

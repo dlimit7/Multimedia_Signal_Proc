@@ -69,6 +69,7 @@ void my_resizer::init(int H, bool is_expand, bool is_sinc_interp)
 					g_m[i][r] = windowed_sinc(r + bank[i % 5], H, alpha);
 				}
 			}
+#ifdef DEBUG
 			for (i = 0; i < 5; i++) {
 				printf("i = %d: ", i);
 				for (r = -FILTER_EXTENT; r <= FILTER_EXTENT; r++) {
@@ -76,7 +77,6 @@ void my_resizer::init(int H, bool is_expand, bool is_sinc_interp)
 				}
 				printf("\n");
 			}
-			// Debugging
 			for (r = -FILTER_EXTENT; r <= FILTER_EXTENT; r++) {
 				for (c = -FILTER_EXTENT; c <= FILTER_EXTENT; c++) {
 					printf("%f ", q_m[0][r*FILTER_DIM + c]);
@@ -84,6 +84,7 @@ void my_resizer::init(int H, bool is_expand, bool is_sinc_interp)
 				printf("\n");
 			}
 			printf("\n\n");
+#endif
 			// Normalising
 			float gain;
 			for (i = 0; i < 25; i++) { // For each kernel..
@@ -94,7 +95,6 @@ void my_resizer::init(int H, bool is_expand, bool is_sinc_interp)
 						gain += q_m[i][r*FILTER_DIM + c];
 					}
 				}
-				printf("Gain is %f\n", gain);
 				// Make DC Gain = 1
 				gain = 1.0f / gain;
 				for (r = -FILTER_EXTENT; r <= FILTER_EXTENT; r++) {
@@ -103,7 +103,7 @@ void my_resizer::init(int H, bool is_expand, bool is_sinc_interp)
 					}
 				}
 			}
-			
+#ifdef DEBUG
 			// Debugging
 			for (i = 0; i < 25; i++) {
 				printf(" i = %d\n", i);
@@ -128,6 +128,7 @@ void my_resizer::init(int H, bool is_expand, bool is_sinc_interp)
 				printf("Gain is %f\n", gain);
 			}
 			*/
+#endif
 			
 		} else // Bilinear interp
 		{
@@ -153,14 +154,6 @@ void my_resizer::init(int H, bool is_expand, bool is_sinc_interp)
 				}
 			}
 		}
-		// Debugging
-		for (r = -FILTER_EXTENT; r <= FILTER_EXTENT; r++) {
-			for (c = -FILTER_EXTENT; c <= FILTER_EXTENT; c++) {
-				printf("%f ", q_m[0][r*FILTER_DIM + c]);
-			}
-			printf("\n");
-		}
-		printf("\n\n");
 		// Normalising
 		float gain;
 		for (i = 0; i < 9; i++) { // For each kernel..
@@ -171,7 +164,6 @@ void my_resizer::init(int H, bool is_expand, bool is_sinc_interp)
 					gain += q_m[i][r*FILTER_DIM + c];
 				}
 			}
-			printf("Gain is %f\n", gain);
 			// Make DC Gain = 1
 			gain = 1.0f / gain;
 			for (r = -FILTER_EXTENT; r <= FILTER_EXTENT; r++) {
@@ -180,6 +172,7 @@ void my_resizer::init(int H, bool is_expand, bool is_sinc_interp)
 				}
 			}
 		}
+#ifdef DEBUG
 		// Debugging
 		for (i = 0; i < 9; i++) {
 			printf(" i = %d\n", i);
@@ -202,9 +195,9 @@ void my_resizer::init(int H, bool is_expand, bool is_sinc_interp)
 			}
 			printf("Gain is %f\n", gain);
 		}
+#endif
 	}
 
-	printf("doneee\n\n\n");
 }
 
 
@@ -229,7 +222,9 @@ void my_resizer::apply_filter(my_image_comp *in, my_image_comp* out) {
 			int m1, m2, n1, n2, x_r, x_c;
 			float *ip, *op;
 			// Perform the convolution
+#ifdef DEBUG
 			printf("Performing convolution: Output image %dx%d\n", out->height, out->width);
+#endif
 			for (r = 0; r < out->height; r++) {
 				for (c = 0; c < out->width; c++) {
 					m1 = r / 5; m2 = c / 5;
@@ -277,7 +272,9 @@ void my_resizer::apply_filter(my_image_comp *in, my_image_comp* out) {
 					*op = sum;
 				}
 			}
+#ifdef DEBUG
 			printf("Done processing image\n");
+#endif
 		
 		}
 		else { // Bilinear interp 
@@ -288,7 +285,6 @@ void my_resizer::apply_filter(my_image_comp *in, my_image_comp* out) {
 			*	s2*(1-s1)	(1-s2)*(1-s1)
 			*
 			*/
-			printf("Bilinear interp\n");
 			float s1, s2, x1, x2;
 			int n1,n2;
 			float *ip, *op;
@@ -316,7 +312,9 @@ void my_resizer::apply_filter(my_image_comp *in, my_image_comp* out) {
 		int m1, m2, n1, n2, x_r, x_c;
 		float *ip, *op;
 		// Perform the convolution
+#ifdef DEBUG
 		printf("Performing convolution: Output image %dx%d\n", out->height, out->width);
+#endif
 		for (r = 0; r < out->height; r++) {
 			for (c = 0; c < out->width; c++) {
 				m1 = r / 3; m2 = c / 3;
@@ -358,7 +356,9 @@ void my_resizer::apply_filter(my_image_comp *in, my_image_comp* out) {
 				*op = sum;
 			}
 		}
+#ifdef DEBUG
 		printf("Done processing image\n");
+#endif
 
 	}
 }

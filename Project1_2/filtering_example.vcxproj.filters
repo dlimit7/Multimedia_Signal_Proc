@@ -10,11 +10,11 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="filtering_main.cpp">
-      <Filter>main</Filter>
-    </ClCompile>
     <ClCompile Include="io_bmp\io_bmp.cpp">
       <Filter>io_bmp</Filter>
+    </ClCompile>
+    <ClCompile Include="image_diff.cpp">
+      <Filter>main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
