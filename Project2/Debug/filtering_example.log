@@ -1,0 +1,6 @@
+﻿  LoG_main.cpp
+c:\users\dlimi\documents\elec4622\project2\log_main.cpp(180): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\dlimi\documents\elec4622\project2\log_main.cpp(181): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  LoG_Filter.cpp
+  Generating Code...
+  filtering_example.vcxproj -> C:\Users\dlimi\Documents\ELEC4622\Project2\Debug\LoG_Project2.exe
