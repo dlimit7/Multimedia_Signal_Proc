@@ -29,10 +29,8 @@ float LoG_2(double s, double sigma)
 }
 
 
-
 #define FILTER_EXTENT H
 #define FILTER_TAPS (2*FILTER_EXTENT+1)
-
 
 void my_LoG::init(float sigma, float alpha, int H)
 {
@@ -88,6 +86,8 @@ void my_LoG::apply_filter(my_image_comp *in, my_image_comp* out) {
 			*mp = sum;
 		}
 	}
+	intermediate.perform_boundary_extension();
+
 	// vertical filter now
 	for (r = 0; r < out->height; r++) {
 		for (c = 0; c < out->width; c++) {
@@ -101,7 +101,6 @@ void my_LoG::apply_filter(my_image_comp *in, my_image_comp* out) {
 			*op = sum;
 		}
 	}
-	intermediate.perform_boundary_extension();
 	// horizontal filter first
 	for (r = 0; r < intermediate.height; r++) {
 		for (c = 0; c < intermediate.width; c++) {
@@ -115,6 +114,7 @@ void my_LoG::apply_filter(my_image_comp *in, my_image_comp* out) {
 			*mp = sum;
 		}
 	}
+	intermediate.perform_boundary_extension();
 	// vertical filter now
 	for (r = 0; r < out->height; r++) {
 		for (c = 0; c < out->width; c++) {

@@ -137,10 +137,10 @@ void my_image_comp::perform_boundary_extension()
 int
   main(int argc, char *argv[])
 {
-  if (argc != 7)
+  if (argc != 8)
     {
       fprintf(stderr,"Usage: %s <in bmp file> <out bmp file> <sigmamin> <sigmamax> <N> <alpha> <H>\n",argv[0]);
-		// log10(10^sigmamin + (10*sigmamax - 10^sigmamin)*scale) task 3
+
       return -1;
     }
 
@@ -160,77 +160,92 @@ int
       int r; // Declare row index
       io_byte *line = new io_byte[width*num_comps];
       for (r=height-1; r >= 0; r--)
-        { // "r" holds the true row index we are reading, since the image is
+      { // "r" holds the true row index we are reading, since the image is
           // stored upside down in the BMP file.
           if ((err_code = bmp_in__get_line(&in,line)) != 0)
             throw err_code;
           for (n=0; n < num_comps; n++)
-            {
+          {
               io_byte *src = line+n; // Points to first sample of component n
               float *dst = input_comps[n].buf + r * input_comps[n].stride;
 				  for (int c = 0; c < width; c++, src += num_comps)
                 dst[c] = (float) *src; // The cast to type "float" is not
                       // strictly required here, since bytes can always be
                       // converted to floats without any loss of information.
-            }
-        }
+          }
+      }
       bmp_in__close(&in);
 		delete[] line;
 
-		float sigma = atof(argv[3]);
-		float alpha = atof(argv[4]);
-		int H = atoi(argv[5]);
-		cout << "sigma alpha H " << sigma << " " << alpha << " " << H << endl;
+		float sigma_min = atof(argv[3]);
+		float sigma_max = atof(argv[4]);
+		int N = atoi(argv[5]);
+		float alpha = atof(argv[6]);
+		int H = atoi(argv[7]);
+		float sigma;
 
-      // Allocate storage for the filtered output
-      my_image_comp *output_comps = new my_image_comp[num_comps];
-      for (n=0; n < num_comps; n++)
-        output_comps[n].init(height,width,0); // Don't need a border for output
+		// log10(10^sigmamin + (10*sigmamax - 10^sigmamin)*scale) task 3
+		for (int n_sigma = 0; n_sigma < N; n_sigma++)
+		{
+			if (N > 1)
+				sigma = (float)log10(pow(10.0, sigma_min) + ((n_sigma / (N - 1.0))*(pow(10.0, sigma_max) - pow(10.0, sigma_min))));
+			else
+				sigma = sigma_min;
 
-      // Process the image, all in floating point (easy)
-		my_LoG laplacian;
-		laplacian.init(sigma, alpha, H);
+			cout << "sigma: " << sigma << " alpha: " << alpha << " H: " << H << endl;
+
+			// Allocate storage for the filtered output
+			my_image_comp *output_comps = new my_image_comp[num_comps];
+			for (n = 0; n < num_comps; n++)
+				output_comps[n].init(height, width, 0); // Don't need a border for output
+
+			 // Process the image, all in floating point (easy)
+			my_LoG laplacian;
+			laplacian.init(sigma, alpha, H);
 
 #ifdef DEBUG
-		printf("Process Image: num comps %d\n", num_comps);
+			printf("Process Image: num comps %d\n", num_comps);
 #endif
-		for (n = 0; n < num_comps; n++)
-			input_comps[n].perform_boundary_extension();
-		for (n = 0; n < num_comps; n++) {
-			laplacian.apply_filter(input_comps + n, output_comps + n);
-		}
+			for (n = 0; n < num_comps; n++)
+				input_comps[n].perform_boundary_extension();
+			for (n = 0; n < num_comps; n++) {
+				laplacian.apply_filter(input_comps + n, output_comps + n);
+			}
 
-      // Write the image back out again
-      bmp_out out;
-		line = new io_byte[width*num_comps];
-      if ((err_code = bmp_out__open(&out,argv[2],width,height,num_comps)) != 0)
-        throw err_code;
-      for (r=height-1; r >= 0; r--)
-		{ // "r" holds the true row index we are writing, since the image is
-				// written upside down in BMP files.
-			//printf("row %d\n", r);
-         for (n=0; n < num_comps; n++)
-         {
-            io_byte *dst = line+n; // Points to first sample of component n
-            float *src = output_comps[n].buf + r * output_comps[n].stride;
-				for (int c = 0; c < width; c++, dst += num_comps) {
-					float t = floor(src[c]+0.5F);
-					t = (t > 255.0f) ? 255.0f : t;
-					t = (t < 0.0f) ? 0.0f : t;
-					*dst = (io_byte)t; // The cast to type "io_byte" is
-							// required here, since floats cannot generally be
-							// converted to bytes without loss of information.  The
-							// compiler will warn you of this if you remove the cast.
-							// There is in fact not the best way to do the
-							// conversion.  You should fix it up in the lab.
+			// Write the image back out again
+			bmp_out out;
+			line = new io_byte[width*num_comps];
+			char file_out[100];
+			sprintf(file_out, "%s_%d.bmp", argv[2], n_sigma);
+			if ((err_code = bmp_out__open(&out, file_out, width, height, num_comps)) != 0)
+				throw err_code;
+			for (r = height - 1; r >= 0; r--)
+			{ // "r" holds the true row index we are writing, since the image is
+					// written upside down in BMP files.
+				//printf("row %d\n", r);
+				for (n = 0; n < num_comps; n++)
+				{
+					io_byte *dst = line + n; // Points to first sample of component n
+					float *src = output_comps[n].buf + r * output_comps[n].stride;
+					for (int c = 0; c < width; c++, dst += num_comps) {
+						float t = floor(src[c] + 0.5F);
+						t = (t > 255.0f) ? 255.0f : t;
+						t = (t < 0.0f) ? 0.0f : t;
+						*dst = (io_byte)t; // The cast to type "io_byte" is
+								// required here, since floats cannot generally be
+								// converted to bytes without loss of information.  The
+								// compiler will warn you of this if you remove the cast.
+								// There is in fact not the best way to do the
+								// conversion.  You should fix it up in the lab.
+					}
 				}
-         }
-         bmp_out__put_line(&out,line);
+				bmp_out__put_line(&out, line);
+			}
+			bmp_out__close(&out);
+			delete[] line;
+			delete[] output_comps;
 		}
-      bmp_out__close(&out);
-      delete[] line;
-      delete[] input_comps;
-      delete[] output_comps;
+		delete[] input_comps;
   }
   catch (int exc) {
       if (exc == IO_ERR_NO_FILE)

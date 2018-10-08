@@ -1,0 +1,1 @@
+ mi_pipe2 :: read_file -f out_19.bmp out_18.bmp out_17.bmp out_16.bmp out_15.bmp out_14.bmp out_13.bmp out_12.bmp out_11.bmp out_10.bmp out_9.bmp out_8.bmp out_7.bmp out_6.bmp out_5.bmp out_4.bmp out_3.bmp out_2.bmp out_1.bmp out_0.bmp out_0.bmp out_0.bmp :: frame_repeat :: view -play -rate 5

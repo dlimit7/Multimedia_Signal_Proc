@@ -88,6 +88,8 @@ void my_LoG::apply_filter(my_image_comp *in, my_image_comp* out) {
 			*mp = sum;
 		}
 	}
+
+	intermediate.perform_boundary_extension();
 	// vertical filter now
 	for (r = 0; r < out->height; r++) {
 		for (c = 0; c < out->width; c++) {
@@ -101,7 +103,6 @@ void my_LoG::apply_filter(my_image_comp *in, my_image_comp* out) {
 			*op = sum;
 		}
 	}
-	intermediate.perform_boundary_extension();
 	// horizontal filter first
 	for (r = 0; r < intermediate.height; r++) {
 		for (c = 0; c < intermediate.width; c++) {
@@ -115,6 +116,8 @@ void my_LoG::apply_filter(my_image_comp *in, my_image_comp* out) {
 			*mp = sum;
 		}
 	}
+
+	intermediate.perform_boundary_extension();
 	// vertical filter now
 	for (r = 0; r < out->height; r++) {
 		for (c = 0; c < out->width; c++) {

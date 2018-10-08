@@ -1,4 +1,4 @@
 ﻿  LoG_Filter.cpp
-c:\users\dlimi\documents\elec4622\project2_2\log_filter.cpp(28): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-c:\users\dlimi\documents\elec4622\project2_2\log_filter.cpp(42): warning C4101: 'c': unreferenced local variable
-  filtering_example.vcxproj -> C:\Users\dlimi\Documents\ELEC4622\Project2_2\Debug\LoG_Project2.exe
+c:\users\dlimi\documents\elec4622\project2_3\log_filter.cpp(28): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+c:\users\dlimi\documents\elec4622\project2_3\log_filter.cpp(40): warning C4101: 'c': unreferenced local variable
+  filtering_example.vcxproj -> C:\Users\dlimi\Documents\ELEC4622\Project2_3\Debug\LoG_Project2.exe
