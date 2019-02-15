@@ -17,5 +17,10 @@
                     - Generates a Motion Compensated Image.
                     - Point-Symmetric Boundary Extension and Bilinear Interpolation used
                     - Motion vectors made to minimise MSE rather than SAD over the block
-              
-As it stands, the global motion estimation strategy used treats all block motion vectors as equally reliable. To address this, modify your program from Task 3 to compute a reliability weight wb for each block b following the method proposed in Section 2, which is based on the figure of merit that is used in the Harris corner detector. This method requires you to perform Gaussian filtering, with scale parameter σ, take local horizontal and vertical differences, compute the 2 × 2 matrices Γσ [n] and aggregate these over each block to form Γ¯σ,b, after which the ratio of determinant to rank can be computed and used as the weight wb. Your program should then find the weighted average of the block motion vectors vb, using this as the global vector v.
+                    TODO
+                    - Modify the global motion estimation strategy to compute a reliability weight for each local motion block
+                      based on the figure of merit that is used in the Harris corner detector. 
+                      This method requires you to perform Gaussian filtering, with scale parameter σ, take local horizontal and vertical
+                      differences, compute the 2 × 2 matrices Γσ [n] and aggregate these over each block to form Γ¯σ,b, 
+                      after which the ratio of determinant to rank can be computed and used as the weight wb. 
+                      The should then find the weighted average of the block motion vectors vb, using this as the global vector v.
